@@ -9,7 +9,7 @@ const app = express()
 const port = 3000
 
 app.get('/', async (req, res)=>{
-    console.log(req);
+
 
     res.sendStatus(200);
 })
@@ -49,6 +49,8 @@ app.get('/cheeses/starts-with/:letter', async (req, res)=>{
     }
 })
 
+
+// currently only returns one cheese
 app.get('/cheeses/worst-rated-board', async (req, res)=>{
     
     const dbQuery = await Board.findAll()
@@ -69,8 +71,10 @@ app.get('/cheeses/worst-rated-board', async (req, res)=>{
 })
 
 app.get('/test/test', async (req, res)=>{
-    console.log(req.query.a)
-    res.sendStatus(200);
+    let x = parseInt(req.query.a)
+    let y = parseInt(req.query.b)
+    console.log(x+y)
+    res.sendStatus(200)
 })
 
 app.listen(port, ()=>{
