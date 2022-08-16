@@ -14,28 +14,39 @@ app.get('/', async (req, res)=>{
     res.sendStatus(200);
 })
 
-app.get('/feta', async (req, res)=>{
-    console.log(req);
+app.get('/cheeses/:cheese', async (req, res)=>{
+    let newString = req.params.cheese[0].toUpperCase() + req.params.cheese.slice(1).toLowerCase()
     const queriedCheese = await Cheese.findOne({
         where: {
-            title: 'Feta'
+            title: newString
         }
     })
-    let {title, description} = queriedCheese
-    let payload = {
-        title: title,
-        description: description
+    if (!queriedCheese){
+        res.send("Sorry, we don't stock that cheese!")
+        return
+    }else{
+        let {title, description} = queriedCheese
+        let payload = {
+            title: title,
+            description: description
+        }
+        res.send(payload);
     }
-    res.send(payload);
 })
 
-app.get('/cheeses/starts-with-c', async (req, res)=>{
-    console.log(req);
+app.get('/cheeses/starts-with/:letter', async (req, res)=>{
+    let newString = req.params.letter[0].toUpperCase()
     const dbQuery = await Cheese.findAll()
-    let startsWithC = dbQuery.filter((cheese)=>{
-        if (cheese.title[0]==='C'){return true}
+    let startsWith = dbQuery.filter((cheese)=>{
+        if (cheese.title[0]===newString){return true}
     })
-    res.send(startsWithC);
+
+    if(startsWith.length === 0){
+        res.send("Sorry, no cheeses beginning with that letter!")
+        return
+    }else{
+        res.send(startsWith.map(i => i.title));
+    }
 })
 
 app.get('/cheeses/worst-rated-board', async (req, res)=>{
@@ -55,6 +66,11 @@ app.get('/cheeses/worst-rated-board', async (req, res)=>{
         rating: rating
     }
     res.send(payload);
+})
+
+app.get('/test/test', async (req, res)=>{
+    console.log(req.query.a)
+    res.sendStatus(200);
 })
 
 app.listen(port, ()=>{
