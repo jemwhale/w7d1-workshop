@@ -72,11 +72,11 @@ app.get('/cheeses/worst-rated-board', async (req, res)=>{
 
 app.post('/boards', async (req, res) => {
     await Board.create(req.body)
-    res.send(sendStatus(200))
+    res.sendStatus(200)
 })
 
 app.put('/boards', async (req, res) =>{
-    let foundBoard = await Board.findByPK(req.body.id)
+    let foundBoard = await Board.findByPk(req.body.id)
     await foundBoard.update({
         rating: req.body.rating
     })
@@ -84,7 +84,7 @@ app.put('/boards', async (req, res) =>{
 })
 
 app.delete('/boards', async (req, res) =>{
-    let foundBoard = await Board.findByPK(req.body.id)
+    let foundBoard = await Board.findByPk(req.body.id)
     await foundBoard.destroy()
     res.sendStatus(200)
 })
