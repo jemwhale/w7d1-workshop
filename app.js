@@ -3,14 +3,14 @@ buildDB()
 
 const express = require('express');
 const { Cheese } = require('./models');
-const { Board} = require('./models');
+const { Board } = require('./models');
 const { boardData } = require('./db/seedData');
 const app = express()
 const port = 3000
 
+app.use(express.json())
+
 app.get('/', async (req, res)=>{
-
-
     res.sendStatus(200);
 })
 
@@ -68,6 +68,25 @@ app.get('/cheeses/worst-rated-board', async (req, res)=>{
         rating: rating
     }
     res.send(payload);
+})
+
+app.post('/boards', async (req, res) => {
+    await Board.create(req.body)
+    res.send(sendStatus(200))
+})
+
+app.put('/boards', async (req, res) =>{
+    let foundBoard = await Board.findByPK(req.body.id)
+    await foundBoard.update({
+        rating: req.body.rating
+    })
+    res.sendStatus(200)
+})
+
+app.delete('/boards', async (req, res) =>{
+    let foundBoard = await Board.findByPK(req.body.id)
+    await foundBoard.destroy()
+    res.sendStatus(200)
 })
 
 app.get('/test/test', async (req, res)=>{
